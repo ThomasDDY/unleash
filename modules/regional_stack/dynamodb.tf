@@ -22,4 +22,6 @@ resource "aws_dynamodb_table" "greetings" {
 
 resource "aws_kms_key" "dynamodb" {
   description = "DynamoDB encryption key"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
 }
