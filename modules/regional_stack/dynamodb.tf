@@ -9,4 +9,17 @@ resource "aws_dynamodb_table" "greetings" {
     name = "id"
     type = "S"
   }
+
+  server_side_encryption {
+    enabled = true
+    kms_key_arn = aws_kms_key.dynamodb.arn
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+}
+
+resource "aws_kms_key" "dynamodb" {
+  description = "DynamoDB encryption key"
 }

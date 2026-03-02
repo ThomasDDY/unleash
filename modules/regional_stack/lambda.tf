@@ -13,6 +13,10 @@ resource "aws_lambda_function" "greeter" {
   handler = "greeter.lambda_handler"
   runtime = "python3.11"
 
+  tracing_config {
+    mode = "Active"
+  }
+
   environment {
     variables = {
       TABLE     = aws_dynamodb_table.greetings.name
@@ -33,6 +37,10 @@ resource "aws_lambda_function" "dispatcher" {
 
   filename      = data.archive_file.dispatcher_zip.output_path
   function_name = "dispatcher-${var.region}"
+
+  tracing_config {
+    mode = "Active"
+  }
 
   role    = aws_iam_role.lambda_role.arn
   handler = "dispatcher.lambda_handler"

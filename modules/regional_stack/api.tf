@@ -14,10 +14,33 @@ resource "aws_apigatewayv2_integration" "greet" {
 
 resource "aws_apigatewayv2_route" "greet" {
 
-  api_id    = aws_apigatewayv2_api.api.id
+  api_id = aws_apigatewayv2_api.api.id
+
   route_key = "POST /greet"
 
   target = "integrations/${aws_apigatewayv2_integration.greet.id}"
+
+  authorization_type = "JWT"
+
+  authorizer_id = aws_apigatewayv2_authorizer.cognito.id
+}
+
+resource "aws_apigatewayv2_authorizer" "cognito" {
+
+  api_id = aws_apigatewayv2_api.api.id
+
+  name = "cognito-authorizer"
+
+  authorizer_type = "JWT"
+
+  identity_sources = [
+    "$request.header.Authorization"
+  ]
+
+  jwt_configuration {
+    audience = []
+    issuer   = var.cognito_pool_arn
+  }
 }
 
 output "api_url" {
