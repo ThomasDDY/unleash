@@ -42,9 +42,7 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.0
 
       - name: Terraform Plan
-        run: terraform plan -input=false
-        env:
-          AWS_EC2_METADATA_DISABLED: true
+        run: terraform plan
 
       - name: Test Placeholder
         run: echo "Run test_script.py here"
