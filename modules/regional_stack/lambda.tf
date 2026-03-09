@@ -42,6 +42,13 @@ resource "aws_lambda_function" "dispatcher" {
     mode = "Active"
   }
 
+  environment {
+    variables = {
+      CLUSTER = aws_ecs_cluster.cluster.name
+      TASK    = aws_ecs_task_definition.dispatch_task.arn
+    }
+  }
+  
   role    = aws_iam_role.lambda_role.arn
   handler = "dispatcher.lambda_handler"
   runtime = "python3.11"
