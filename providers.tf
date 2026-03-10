@@ -9,7 +9,7 @@ terraform {
     bucket         = "ydd-terraform-state-bucket"
     key            = "unleash/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "ydd-terraform-lock-table"
+    use_lockfile   = true
   }
 }
 
