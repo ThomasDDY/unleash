@@ -8,7 +8,7 @@ terraform {
   backend "s3" {
     bucket       = "ydd-terraform-state-bucket"
     key          = "unleash/terraform.tfstate"
-    region       = "us-east-1"
+    region       = "ap-southeast-2"
     use_lockfile = true
   }
 }
