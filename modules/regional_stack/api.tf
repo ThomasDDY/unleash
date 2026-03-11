@@ -28,6 +28,8 @@ resource "aws_apigatewayv2_route" "greet" {
 resource "aws_cloudwatch_log_group" "api_logs" {
   name              = "/aws/apigateway/candidate-api-${var.region}"
   retention_in_days = 7
+
+  kms_key_id = aws_kms_key.kms.arn
 }
 
 resource "aws_apigatewayv2_stage" "default" {

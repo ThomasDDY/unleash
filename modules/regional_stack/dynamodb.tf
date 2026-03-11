@@ -12,7 +12,7 @@ resource "aws_dynamodb_table" "greetings" {
 
   server_side_encryption {
     enabled = true
-    kms_key_arn = aws_kms_key.dynamodb.arn
+    kms_key_arn = aws_kms_key.kms.arn
   }
 
   point_in_time_recovery {
@@ -20,8 +20,8 @@ resource "aws_dynamodb_table" "greetings" {
   }
 }
 
-resource "aws_kms_key" "dynamodb" {
-  description = "DynamoDB encryption key"
+resource "aws_kms_key" "kms" {
+  description = "KMS encryption key"
   deletion_window_in_days = 7
   enable_key_rotation     = true
 }
