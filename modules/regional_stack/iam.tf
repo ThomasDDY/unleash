@@ -31,18 +31,10 @@ resource "aws_iam_policy" "lambda_permissions" {
       {
         Effect = "Allow"
         Action = [
-          "sns:Publish"
-        ]
-        Resource = aws_sns_topic.notifications.arn
-      },
-
-      {
-        Effect = "Allow"
-        Action = [
           "kms:Decrypt",
           "kms:GenerateDataKey"
         ]
-        Resource = aws_kms_key.main.arn
+        Resource = aws_kms_key.dynamodb.arn
       }
 
     ]
