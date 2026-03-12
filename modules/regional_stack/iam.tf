@@ -14,7 +14,7 @@ resource "aws_iam_role" "lambda_role" {
 
 resource "aws_iam_policy" "lambda_permissions" {
 
-  name = "lambda-app-permissions"
+  name = "lambda-app-permissions-${var.region}"
 
   policy = jsonencode({
     Version = "2012-10-17"
