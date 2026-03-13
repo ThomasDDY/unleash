@@ -9,7 +9,9 @@ API_EU = "https://nuuvabun6f.execute-api.eu-west-1.amazonaws.com"
 
 apis = [
     f"{API_US}/greet",
-    f"{API_EU}/greet"
+    f"{API_EU}/greet",
+    f"{API_US}/dispatch",
+    f"{API_EU}/dispatch"    
 ]
 
 def call_api(url):

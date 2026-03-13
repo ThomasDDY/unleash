@@ -43,7 +43,15 @@ resource "aws_iam_policy" "lambda_permissions" {
           "sns:Publish"
         ]
         Resource = var.sns_topic
-      }
+      },
+
+      {
+        Effect = "Allow"
+        Action = [
+          "ecs:RunTask"
+        ]
+        Resource = aws_ecs_task_definition.dispatch_task.arn
+      }      
 
     ]
   })
