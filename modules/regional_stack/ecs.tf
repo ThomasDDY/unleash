@@ -4,7 +4,7 @@ resource "aws_ecs_cluster" "cluster" {
   setting {
     name  = "containerInsights"
     value = "enabled"
-  }  
+  }
 }
 
 data "aws_vpc" "default" {
@@ -80,9 +80,10 @@ resource "aws_route_table_association" "public_subnet" {
 }
 
 resource "aws_security_group" "ecs_task" {
-  name   = "ecs-task-sg"
-  vpc_id = aws_vpc.main.id
-
+  name        = "ecs-task-sg"
+  vpc_id      = aws_vpc.main.id
+  description = "Allow outbound traffic to SNS"
+  
   egress {
     from_port   = 443
     to_port     = 443
