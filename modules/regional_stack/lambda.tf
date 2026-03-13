@@ -46,8 +46,6 @@ resource "aws_lambda_function" "dispatcher" {
     variables = {
       CLUSTER        = aws_ecs_cluster.cluster.name
       TASK           = aws_ecs_task_definition.dispatch_task.arn
-      SUBNET         = aws_subnet.public.id
-      SECURITY_GROUP = aws_security_group.ecs_task.id
     }
   }
 
