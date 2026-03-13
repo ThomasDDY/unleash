@@ -43,17 +43,14 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_flow_log" "vpc_flow_log" {
-  iam_role_arn    = aws_iam_role.vpc_flow_logs_role.arn
-  log_destination = aws_cloudwatch_log_group.vpc_flow_logs.arn
-  traffic_type    = "ALL"
-  vpc_id          = aws_vpc.main.id
+  log_destination_type = "s3"
+  log_destination      = aws_s3_bucket.vpc_flow_logs.arn
+  traffic_type         = "ALL"
+  vpc_id               = aws_vpc.main.id
 }
 
-resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
-  name = "VPC Flow Logs - ${var.region}"
-
-  retention_in_days = 7
-  kms_key_id        = aws_kms_key.log_key.arn
+resource "aws_s3_bucket" "vpc_flow_logs" {
+  bucket = "ydd-vpc-flow-logs-${var.region}"
 }
 
 data "aws_iam_policy_document" "assume_role" {
