@@ -44,11 +44,13 @@ resource "aws_lambda_function" "dispatcher" {
 
   environment {
     variables = {
-      CLUSTER = aws_ecs_cluster.cluster.name
-      TASK    = aws_ecs_task_definition.dispatch_task.arn
+      CLUSTER        = aws_ecs_cluster.cluster.name
+      TASK           = aws_ecs_task_definition.dispatch_task.arn
+      SUBNET         = aws_subnet.public.id
+      SECURITY_GROUP = aws_security_group.ecs_task.id
     }
   }
-  
+
   role    = aws_iam_role.lambda_role.arn
   handler = "dispatcher.lambda_handler"
   runtime = "python3.11"
@@ -56,24 +58,24 @@ resource "aws_lambda_function" "dispatcher" {
 
 resource "aws_lambda_permission" "apigw_greeter" {
 
-  statement_id  = "AllowAPIGatewayInvokeGreeter"
+  statement_id = "AllowAPIGatewayInvokeGreeter"
 
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.greeter.function_name
 
-  principal     = "apigateway.amazonaws.com"
+  principal = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.api.execution_arn}/*/*"
 }
 
 resource "aws_lambda_permission" "apigw_dispatcher" {
 
-  statement_id  = "AllowAPIGatewayInvokeDispatcher"
+  statement_id = "AllowAPIGatewayInvokeDispatcher"
 
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.dispatcher.function_name
 
-  principal     = "apigateway.amazonaws.com"
+  principal = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.api.execution_arn}/*/*"
 }
