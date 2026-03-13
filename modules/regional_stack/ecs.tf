@@ -42,68 +42,15 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_flow_log" "vpc_flow_log" {
-  log_destination_type = "s3"
-  log_destination      = aws_s3_bucket.vpc_flow_logs.arn
-  traffic_type         = "ALL"
-  vpc_id               = aws_vpc.main.id
+resource "aws_flow_log" "example" {
+  iam_role_arn    = aws_iam_role.example.arn
+  log_destination = aws_cloudwatch_log_group.example.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.main.id
 }
 
-resource "aws_s3_bucket" "logging" {
-  bucket = "ydd-access-logging-bucket"
-}
-
-data "aws_iam_policy_document" "logging_bucket_policy" {
-  statement {
-    principals {
-      identifiers = ["logging.s3.amazonaws.com"]
-      type        = "Service"
-    }
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.logging.arn}/*"]
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [data.aws_caller_identity.current.account_id]
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "logging" {
-  bucket = aws_s3_bucket.logging.bucket
-  policy = data.aws_iam_policy_document.logging_bucket_policy.json
-}
-
-resource "aws_s3_bucket_logging" "vpc_flow_logs" {
-  bucket = aws_s3_bucket.vpc_flow_logs.bucket
-
-  target_bucket = aws_s3_bucket.logging.bucket
-  target_prefix = "log/"
-  target_object_key_format {
-    partitioned_prefix {
-      partition_date_source = "EventTime"
-    }
-  }
-}
-
-resource "aws_s3_bucket" "vpc_flow_logs" {
-  bucket = "ydd-vpc-flow-logs-${var.region}"
-}
-
-resource "aws_s3_bucket_versioning" "versioning_vpc_flow_logs" {
-  bucket = aws_s3_bucket.vpc_flow_logs.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "vpc_flow_logs_block" {
-  bucket = aws_s3_bucket.vpc_flow_logs.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+resource "aws_cloudwatch_log_group" "example" {
+  name = "example"
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -119,12 +66,12 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-resource "aws_iam_role" "vpc_flow_logs_role" {
-  name               = "vpc-flow-logs-role-${var.region}"
+resource "aws_iam_role" "example" {
+  name               = "example"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-data "aws_iam_policy_document" "vpc_flow_logs_policy" {
+data "aws_iam_policy_document" "example" {
   statement {
     effect = "Allow"
 
@@ -140,10 +87,10 @@ data "aws_iam_policy_document" "vpc_flow_logs_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
-  name   = "vpc-flow-logs-policy-${var.region}"
-  role   = aws_iam_role.vpc_flow_logs_role.id
-  policy = data.aws_iam_policy_document.vpc_flow_logs_policy.json
+resource "aws_iam_role_policy" "example" {
+  name   = "example"
+  role   = aws_iam_role.example.id
+  policy = data.aws_iam_policy_document.example.json
 }
 
 resource "aws_internet_gateway" "igw" {
