@@ -51,6 +51,12 @@ resource "aws_iam_policy" "lambda_permissions" {
           "ecs:RunTask"
         ]
         Resource = aws_ecs_task_definition.dispatch_task.arn
+      },
+      
+      {
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = "*"
       }      
 
     ]
